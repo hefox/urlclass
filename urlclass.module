@@ -1,0 +1,37 @@
+<?php
+
+
+/**
+ * Implementation of hook_menu().
+ */
+ 
+function urlclass_menu() {
+  $items['admin/settings/urlclass'] = array(
+    'title' => 'Url class settings',
+    'description' => 'Configure urls+classes.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('urlclass_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'urlclass.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_menu_init().
+ */
+function urlclass_init() { // todo cache_set
+  $urls = explode("\n", variable_get('urlclass', ""));
+  // go through each path/perm.  
+  foreach ($urls as $urlclass) {
+    $perm = '';
+    list($url, $class) = explode(",",$urlclass);
+    if ($url && $class) $settings['urlclass']['urls'][trim($url)] = trim($class);
+  }
+  if ($settings['urlclass']['urls']) {
+    $path = drupal_get_path('module', 'urlclass');
+    drupal_add_js($path .'/urlclass.js');
+    drupal_add_js($settings ,'setting');
+  }
+}

@@ -1,0 +1,3 @@
+name = Urls
+description = Uses jquery to add a specified class if a href contains a specified string. 
+core = 6.x
